@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Invitación de graduación</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0c1a33;
+  --navy:#14294d;
+  --gold:#c9a24a;
+  --gold-d:#7a5a1e;
+  --gold-l:#f3deA0;
+  --parch:#f4e9cf;
+  --serif-caps:"Cinzel",Georgia,"Times New Roman",serif;
+  --serif-text:"Cormorant Garamond","IM Fell English",Georgia,serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3.2vh;
+  background:radial-gradient(ellipse at 50% 35%,#1d3662 0%,#0f2141 45%,#060e1f 100%);
+  color:var(--parch);font-family:var(--serif-text);
+  -webkit-user-select:none;user-select:none;
+}
+
+/* ---------- Fondo decorativo ---------- */
+.bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.vignette{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse at center,transparent 42%,rgba(3,8,18,.78) 100%)}
+.page-frame{
+  position:fixed;inset:16px;z-index:0;pointer-events:none;
+  border:1px solid rgba(201,162,74,.6);
+  box-shadow:inset 0 0 0 4px var(--ink),inset 0 0 0 5px rgba(201,162,74,.3);
+}
+.page-frame::before{content:"";position:absolute;inset:8px;border:1px dotted rgba(201,162,74,.45)}
+.orn{
+  position:fixed;z-index:0;pointer-events:none;
+  width:clamp(90px,16vmin,160px);height:auto;
+  filter:drop-shadow(0 0 6px rgba(201,162,74,.35));
+}
+.orn.tl{left:6px;top:6px}
+.orn.tr{right:6px;top:6px;transform:scaleX(-1)}
+.orn.bl{left:6px;bottom:6px;transform:scaleY(-1)}
+.orn.br{right:6px;bottom:6px;transform:scale(-1,-1)}
+.dust{
+  position:fixed;z-index:0;border-radius:50%;pointer-events:none;opacity:0;
+  background:var(--gold-l);box-shadow:0 0 6px var(--gold);animation:rise linear infinite;
+}
+@keyframes rise{
+  0%{transform:translateY(0);opacity:0}
+  15%{opacity:.85}
+  85%{opacity:.5}
+  100%{transform:translateY(-110vh);opacity:0}
+}
+
+/* ---------- Tipografía y separadores ---------- */
+.caption{
+  font-family:var(--serif-caps);font-weight:600;font-size:13px;letter-spacing:.42em;text-transform:uppercase;
+  color:var(--gold-l);transition:opacity .4s;
+}
+.caption::before,.caption::after{content:"✦";margin:0 .9em;color:var(--gold);font-size:9px;vertical-align:middle}
+.divider{width:min(60vw,380px);height:auto;display:block;transition:opacity .4s;
+  filter:drop-shadow(0 0 5px rgba(201,162,74,.3))}
+.hint{
+  font-family:var(--serif-text);font-style:italic;font-weight:600;font-size:clamp(18px,2.4vmin,22px);
+  letter-spacing:.05em;color:var(--parch);animation:pulse 2.6s ease-in-out infinite;transition:opacity .4s;
+}
+.is-hidden{opacity:0 !important}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+
+/* ---------- Sobre ---------- */
+.env{
+  position:relative;width:min(82vw,420px);aspect-ratio:100/64;
+  background:none;border:0;padding:0;cursor:pointer;border-radius:4px;
+  -webkit-tap-highlight-color:transparent;
+}
+.env:focus-visible{outline:2px solid var(--gold-l);outline-offset:10px}
+.env.done{pointer-events:none}
+.part{position:absolute;inset:0}
+
+.back{
+  z-index:0;border-radius:4px;
+  background:
+    repeating-linear-gradient(90deg,rgba(122,90,30,.035) 0 2px,transparent 2px 7px),
+    radial-gradient(circle at 15% 20%,rgba(255,250,235,.8),transparent 45%),
+    radial-gradient(circle at 85% 80%,rgba(150,110,50,.22),transparent 50%),
+    linear-gradient(170deg,#f7eed6,#e6d3a2);
+  box-shadow:
+    0 40px 70px -24px rgba(0,0,0,.85),
+    inset 0 0 0 1px rgba(122,90,30,.55),
+    inset 0 0 0 4px #f5ecd3,
+    inset 0 0 0 5px rgba(201,162,74,.5),
+    inset 0 0 50px rgba(120,80,30,.28);
+}
+
+.flap{
+  z-index:2;clip-path:polygon(0 0,100% 0,50% 58%);
+  background:
+    repeating-linear-gradient(90deg,rgba(243,222,160,.035) 0 2px,transparent 2px 7px),
+    radial-gradient(circle at 50% 10%,rgba(120,150,210,.2),transparent 60%),
+    linear-gradient(180deg,#22406e,#101f3d);
+  transform-origin:50% 0;transition:transform .9s cubic-bezier(.6,0,.3,1);
+}
+.env.open .flap{transform:scaleY(-1);z-index:0}
+
+.front{
+  z-index:3;border-radius:4px;clip-path:polygon(0 0,50% 58%,100% 0,100% 100%,0 100%);
+  background:
+    repeating-linear-gradient(90deg,rgba(122,90,30,.03) 0 2px,transparent 2px 7px),
+    radial-gradient(circle at 20% 80%,rgba(150,110,50,.2),transparent 45%),
+    radial-gradient(circle at 80% 20%,rgba(255,250,235,.5),transparent 40%),
+    linear-gradient(180deg,#f3e6c4,#dcc692);
+}
+
+.deco{z-index:3;width:100%;height:100%;pointer-events:none;overflow:visible}
+.cordsvg{z-index:3;width:100%;height:100%;pointer-events:none;overflow:visible;transition:opacity .4s}
+.env.open .cordsvg{opacity:0}
+
+/* Sello de cera */
+.seal{
+  position:absolute;left:50%;top:58%;width:27%;aspect-ratio:1;transform:translate(-50%,-50%);
+  z-index:4;filter:drop-shadow(0 8px 10px rgba(0,0,0,.5));transition:opacity .45s;
+}
+.seal img{width:100%;height:100%;display:block}
+.env.open .seal{opacity:0}
+
+/* ---------- Carta ---------- */
+.letter{
+  position:fixed;left:0;top:0;width:10px;height:10px;transform-origin:0 0;
+  opacity:0;z-index:1;pointer-events:none;border-radius:2px;overflow:hidden;
+  box-shadow:0 0 0 1px var(--gold),0 0 0 6px var(--ink),0 0 0 7px var(--gold),0 25px 60px rgba(0,0,0,.7);
+}
+.letter img{display:block;width:100%;height:100%}
+
+.spark{
+  position:fixed;left:0;top:0;width:6px;height:6px;border-radius:50%;
+  background:var(--gold-l);box-shadow:0 0 10px 2px rgba(241,220,152,.8);
+  pointer-events:none;z-index:20;
+}
+</style>
+</head>
+<body>
+
+<!-- Biblioteca de ornamentos (damasco) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="leaf"><path d="M0,0 C9,-10 28,-12 42,0 C28,12 9,10 0,0Z"/></g>
+
+    <g id="ros">
+      <path d="M0,-6 C8,-14 8,-30 0,-40 C-8,-30 -8,-14 0,-6Z"/>
+      <path transform="rotate(45)"  d="M0,-6 C8,-14 8,-30 0,-40 C-8,-30 -8,-14 0,-6Z"/>
+      <path transform="rotate(90)"  d="M0,-6 C8,-14 8,-30 0,-40 C-8,-30 -8,-14 0,-6Z"/>
+      <path transform="rotate(135)" d="M0,-6 C8,-14 8,-30 0,-40 C-8,-30 -8,-14 0,-6Z"/>
+      <path transform="rotate(180)" d="M0,-6 C8,-14 8,-30 0,-40 C-8,-30 -8,-14 0,-6Z"/>
+      <path transform="rotate(225)" d="M0,-6 C8,-14 8,-30 0,-40 C-8,-30 -8,-14 0,-6Z"/>
+      <path transform="rotate(270)" d="M0,-6 C8,-14 8,-30 0,-40 C-8,-30 -8,-14 0,-6Z"/>
+      <path transform="rotate(315)" d="M0,-6 C8,-14 8,-30 0,-40 C-8,-30 -8,-14 0,-6Z"/>
+      <circle r="5.5" fill="#c9a24a" stroke="none"/>
+    </g>
+
+    <pattern id="damask" width="96" height="96" patternUnits="userSpaceOnUse">
+      <use href="#ros" transform="translate(48,48) scale(.2)" fill="none" stroke="#c9a24a" stroke-opacity=".16" stroke-width="2"/>
+      <use href="#leaf" transform="translate(0,0) rotate(45) scale(.5)" fill="#c9a24a" fill-opacity=".12"/>
+      <use href="#leaf" transform="translate(96,0) rotate(135) scale(.5)" fill="#c9a24a" fill-opacity=".12"/>
+      <use href="#leaf" transform="translate(96,96) rotate(225) scale(.5)" fill="#c9a24a" fill-opacity=".12"/>
+      <use href="#leaf" transform="translate(0,96) rotate(315) scale(.5)" fill="#c9a24a" fill-opacity=".12"/>
+      <circle cx="48" cy="0" r="1.4" fill="#c9a24a" fill-opacity=".3"/>
+      <circle cx="48" cy="96" r="1.4" fill="#c9a24a" fill-opacity=".3"/>
+      <circle cx="0" cy="48" r="1.4" fill="#c9a24a" fill-opacity=".3"/>
+      <circle cx="96" cy="48" r="1.4" fill="#c9a24a" fill-opacity=".3"/>
+    </pattern>
+  </defs>
+</svg>
+
+<svg class="bg" aria-hidden="true">
+  <rect width="100%" height="100%" fill="url(#damask)"/>
+</svg>
+<div class="vignette"></div>
+<div class="page-frame"></div>
+
+<img class="orn tl" src="../assets/corner.png" alt="">
+<img class="orn tr" src="../assets/corner.png" alt="">
+<img class="orn bl" src="../assets/corner.png" alt="">
+<img class="orn br" src="../assets/corner.png" alt="">
+
+<p class="caption fadeout" id="cap">Tienes una invitación</p>
+<img class="divider fadeout" src="../assets/divider.png" alt="">
+
+<button class="env" id="env" type="button" aria-label="Abrir invitación">
+  <div class="part back"></div>
+  <div class="part flap"></div>
+  <div class="part front"></div>
+
+  <svg class="part deco" viewBox="0 0 100 64" aria-hidden="true">
+    <path d="M0,0 L50,58 L100,0" fill="none" stroke="#c9a24a" stroke-width="1" vector-effect="non-scaling-stroke"/>
+    <path d="M4,6 L50,60.5 L96,6" fill="none" stroke="#b08a3e" stroke-width=".6" vector-effect="non-scaling-stroke"/>
+    <path d="M2.5,24 L2.5,61.5 L97.5,61.5 L97.5,24" fill="none" stroke="#9a7430" stroke-width="1" vector-effect="non-scaling-stroke"/>
+    <path d="M5,27 L5,59 L95,59 L95,27" fill="none" stroke="#b08a3e" stroke-width=".6" vector-effect="non-scaling-stroke"/>
+    <image href="../assets/corner.png" x="0" y="0" width="26" height="26" transform="translate(0,64) scale(1,-1)"/>
+    <image href="../assets/corner.png" x="0" y="0" width="26" height="26" transform="translate(100,64) scale(-1,-1)"/>
+  </svg>
+
+  <svg class="part cordsvg" viewBox="0 0 100 64" aria-hidden="true">
+    <path d="M47,26 C45,16 46,6 54,7 C62,8 57,20 50,28" fill="none" stroke="#c9a24a" stroke-width="1.6" vector-effect="non-scaling-stroke" stroke-linecap="round"/>
+    <path d="M51,50 C53,56 60,58 68,57" fill="none" stroke="#c9a24a" stroke-width="1.6" vector-effect="non-scaling-stroke" stroke-linecap="round"/>
+  </svg>
+
+  <div class="seal">
+    <img src="../assets/seal.png" alt="">
+  </div>
+</button>
+
+<p class="hint fadeout" id="hint">Toca el sobre para abrirlo</p>
+<img class="divider fadeout" src="../assets/divider.png" alt="" style="width:min(44vw,190px)">
+
+<div class="letter" id="letter">
+  <img id="carta" src="invitacion.png" alt="Invitación de graduación">
+</div>
+
+<script>
+(function(){
+  // Partículas de polvo dorado (al fondo)
+  const first = document.body.firstChild;
+  for (let i = 0; i < 44; i++){
+    const d = document.createElement('i');
+    d.className = 'dust';
+    const s = 1 + Math.random() * 2.6;
+    d.style.width = d.style.height = s + 'px';
+    d.style.left = (Math.random() * 100) + 'vw';
+    d.style.top = (Math.random() * 100) + 'vh';
+    d.style.animationDuration = (14 + Math.random() * 16) + 's';
+    d.style.animationDelay = (-Math.random() * 20) + 's';
+    document.body.insertBefore(d, first);
+  }
+
+  const env = document.getElementById('env');
+  const letter = document.getElementById('letter');
+  const img = document.getElementById('carta');
+  const fadeouts = document.querySelectorAll('.fadeout');
+
+  let ratio = 1660/2400;
+  let revealed = false, busy = false;
+
+  img.addEventListener('load', () => {
+    if (img.naturalWidth) ratio = img.naturalWidth / img.naturalHeight;
+  });
+
+  function fit(){
+    const maxH = innerHeight * 0.92;
+    const maxW = innerWidth * 0.94;
+    const h = Math.min(maxH, maxW / ratio);
+    const w = h * ratio;
+    return { x:(innerWidth - w)/2, y:(innerHeight - h)/2, w, h };
+  }
+
+  function placeFinal(){
+    const f = fit();
+    Object.assign(letter.style, {
+      left: f.x + 'px', top: f.y + 'px',
+      width: f.w + 'px', height: f.h + 'px', transform: 'none'
+    });
+  }
+
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+  function burst(){
+    const cx = innerWidth / 2, cy = innerHeight / 2;
+    for (let i = 0; i < 28; i++){
+      const d = document.createElement('span');
+      d.className = 'spark';
+      document.body.appendChild(d);
+      const a = Math.random() * Math.PI * 2;
+      const r = 120 + Math.random() * 220;
+      d.animate([
+        { transform:`translate(${cx}px,${cy}px) scale(1)`, opacity:1 },
+        { transform:`translate(${cx + Math.cos(a)*r}px,${cy + Math.sin(a)*r}px) scale(.2)`, opacity:0 }
+      ], { duration: 1400 + Math.random()*700, easing:'cubic-bezier(.2,.7,.3,1)', fill:'forwards' })
+        .onfinish = () => d.remove();
+    }
+  }
+
+  async function abrir(){
+    if (busy || revealed) return;
+    busy = true;
+    env.classList.add('open', 'done');
+    fadeouts.forEach(el => el.classList.add('is-hidden'));
+
+    const er = env.getBoundingClientRect();
+    const f = fit();
+    Object.assign(letter.style, {
+      left: f.x + 'px', top: f.y + 'px', width: f.w + 'px', height: f.h + 'px'
+    });
+
+    // Posición inicial: la carta dentro del sobre
+    const iw = er.width * 0.84;
+    const ih = iw / ratio;
+    const ix = er.left + er.width * 0.08;
+    const iy = er.bottom - ih - er.height * 0.05;
+    const s = iw / f.w;
+
+    await sleep(380);
+    letter.style.opacity = 1;
+
+    const anim = letter.animate([
+      { transform:`translate(${ix - f.x}px,${iy - f.y}px) scale(${s})` },
+      { transform:'translate(0px,0px) scale(1)' }
+    ], { duration: 1600, easing:'cubic-bezier(.2,.75,.25,1)' });
+
+    env.animate([{ opacity:1 }, { opacity:0 }],
+      { duration: 650, delay: 750, fill:'forwards' });
+
+    await anim.finished;
+    placeFinal();
+    letter.style.zIndex = 10;
+    revealed = true;
+    busy = false;
+    burst();
+  }
+
+  env.addEventListener('click', abrir);
+  addEventListener('resize', () => { if (revealed) placeFinal(); });
+})();
+</script>
+</body>
+</html>
